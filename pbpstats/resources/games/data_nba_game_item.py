@@ -11,7 +11,7 @@ class DataNbaGameItem(object):
         self.game_id = int(item.get("gid"))
         self.date = item.get("gdte")
         self.utc_time = item.get("utctm")
-        self.DateTimeUTC = datetime.strptime(f"{self.date} {self.utc_time}", "%Y-%m-%d %H:%M")
+        self.date_time_utc = datetime.strptime(f"{self.date} {self.utc_time}", "%Y-%m-%d %H:%M")
         self.status = item.get("stt")
         self.series_summary = item.get("seri")
         self.home_team_id = item.get("h", {}).get("tid")
