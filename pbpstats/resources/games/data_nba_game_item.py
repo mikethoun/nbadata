@@ -1,14 +1,4 @@
-KEY_ATTR_MAPPER = {
-    "gid": "game_id",
-    "gdte": "date",
-    "utctm": "utc_time",
-    "stt": "status",
-    "seri": "series_summary",
-    "an": "stadium",
-    "ac": "stadium_city",
-    "as": "stadium_state",
-}
-
+from datetime import datetime
 
 class DataNbaGameItem(object):
     """
@@ -18,21 +8,27 @@ class DataNbaGameItem(object):
     """
 
     def __init__(self, item):
-        for key, value in KEY_ATTR_MAPPER.items():
-            if item.get(key) is not None:
-                setattr(self, value, item.get(key))
-        self.home_team_id = item["h"]["tid"]
-        self.home_team_record = item["h"]["re"]
-        self.home_team_abbreviation = item["h"]["ta"]
-        self.home_team_name = item["h"]["tn"]
-        self.home_team_city = item["h"]["tc"]
-        self.home_score = item["h"]["s"]
-        self.away_team_id = item["v"]["tid"]
-        self.away_team_record = item["v"]["re"]
-        self.away_team_abbreviation = item["v"]["ta"]
-        self.away_team_name = item["v"]["tn"]
-        self.away_team_city = item["v"]["tc"]
-        self.away_score = item["v"]["s"]
+        self.game_id = int(item.get("gid"))
+        self.date = item.get("gdte")
+        self.utc_time = item.get("utctm")
+        self.date_time_utc = datetime.strptime(self.utc_time, "%Y-%m-%d %H:%M:%S")
+        self.status = item.get("stt")
+        self.series_summary = item.get("seri")
+        self.home_team_id = item.get("h", {}).get("tid")
+        self.home_team_record = item.get("h", {}).get("re")
+        self.home_team_abbreviation = item.get("h", {}).get("ta")
+        self.home_team_name = item.get("h", {}).get("tn")
+        self.home_team_city = item.get("h", {}).get("tc")
+        self.home_score = item.get("h", {}).get("s", 0)
+        self.away_team_id = item.get("v", {}).get("tid")
+        self.away_team_record = item.get("v", {}).get("re")
+        self.away_team_abbreviation = item.get("v", {}).get("ta")
+        self.away_team_name = item.get("v", {}).get("tn")
+        self.away_team_city = item.get("v", {}).get("tc")
+        self.away_score = item.get("v", {}).get("s", 0)
+        self.stadium = item.get("an")
+        self.stadium_city = item.get("ac")
+        self.stadium_state = item.get("as")
 
     @property
     def data(self):
